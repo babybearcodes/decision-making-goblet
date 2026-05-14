@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Decision Making Goblet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Parisienne&display=swap');
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Georgia", serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #111 0%, #000 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    
+    .phone {
+      width: 360px;
+      height: 720px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #000;
+      box-shadow:
+        0 0 40px rgba(0, 150, 255, 0.2),
+        0 20px 60px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+
+    
+    .room {
+      width: 100%;
+      height: 100%;
+      background: url("img/bg3.png") center / cover no-repeat;
+      position: relative;
+    }
+
+   
+    .room::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at center,
+        rgba(0,0,0,0.2),
+        rgba(0,0,0,0.75)
+      );
+      pointer-events: none;
+    }
+
+  
+    .goblet{
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .goblet img {
+      width: 100%;
+      display: block;
+    }
+
+   
+.blue-flame {
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 100px;
+  pointer-events: none;
+  z-index: 3;
+  animation: shake 0.15s infinite alternate;
+
+}
+
+
+.blue-flame::before,
+.blue-flame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 40% 40%;
+  filter: blur(8px);
+  animation: rise 0.45s infinite ease-in-out;
+}
+
+
+.blue-flame::before {
+  background: radial-gradient(
+    circle at bottom,
+    #bfffff 0%,
+    #4fdcff 45%,
+    transparent 70%
+  );
+  animation-duration: 0.35s;
+}
+
+
+.blue-flame::after {
+  background: radial-gradient(
+    circle at bottom,
+    #4fdcff 0%,
+    #ffffff 50%,
+    transparent 80%
+  );
+  animation-duration: 0.55s;
+  opacity: 0.8;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(20px) scaleX(0.9) scaleY(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-20px) scaleX(1.05) scaleY(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-50px) scaleX(0.85) scaleY(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes shake {
+  from { transform: translateX(-50%) translateX(-2px); }
+  to   { transform: translateX(-50%) translateX(2px); }
+}
+
+
+   
+    .parchment {
+      position: absolute;
+      bottom: 10px;
+      right: -10px;
+      width: 120px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .parchment img {
+      width: 100%;
+      display: block;
+    }
+
+    
+.parchment.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+
+    
+    .ambient-glow {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      width: 260px;
+      height: 260px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle, rgba(0,120,255,0.15), transparent 70%);
+      pointer-events: none;
+    }
+
+    
+.triangle-flame {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 140px;
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+
+.triangle-flame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at bottom,
+    #4fdcff 0%,
+    #a3b3d3 50%,
+    transparent 80%);
+  clip-path: polygon(
+    50% 0%,
+    90% 100%,
+    10% 100%
+  );
+  animation: triangleBurn 0.9s infinite ease-in-out;
+}
+
+@keyframes triangleBurn {
+  0% {
+    transform: scaleY(0.9) translateY(20px);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scaleY(1.05) translateY(-10px);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scaleY(1.2) translateY(-40px);
+    opacity: 0;
+  }
+}
+
+
+
+.parchment-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+
+.parchment-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+.parchment-overlay img {
+  width: 280px;
+  max-width: 85%;
+  animation: floatParchment 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+
+@keyframes floatParchment {
+  0%   { transform: translateY(0px) scale(0.95); }
+  50%  { transform: translateY(-12px) scale(1); }
+  100% { transform: translateY(0px) scale(0.95); }
+}
+
+.big-parchment {
+  width: 280px;
+  height: 420px;
+  background: url("img/parchment write.png") center / cover no-repeat;
+  position: relative;
+  animation: floatParchment 3s ease-in-out infinite;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.big-parchment {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+
+
+.writing-area {
+  position: absolute;
+  top: 98px;
+  bottom: 120px;
+  left: 60px;
+  right: 69px;
+
+  font-family: 'Parisienne', cursive;
+  font-size: 30px;
+  line-height: 1.2;
+  color: #2b1b0f;
+
+  overflow-y: scroll;  
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  outline: none;
+  caret-color: transparent;
+}
+
+
+.writing-area::-webkit-scrollbar {
+  display: none;
+}
+
+.writing-area,
+.writing-area * {
+  font-family: 'Parisienne', cursive !important;
+  font-size: 22px !important;
+  color: #2b1b0f !important;
+}
+
+
+.quill {
+  position: absolute;
+  left:-30px ;
+  top:-25px;
+  pointer-events: none;
+  opacity: 0;               
+}
+
+
+.goblet.angry .blue-flame {
+  animation: shake 0.05s infinite alternate;
+  transform: translateX(-50%) scale(1.3);
+}
+
+.goblet.angry .blue-flame::before {
+  animation-duration: 0.18s;
+}
+
+.goblet.angry .blue-flame::after {
+  animation-duration: 0.25s;
+}
+
+
+.red-flame {
+  position: absolute;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 100px;
+  pointer-events: none;
+  z-index: 3;
+  animation: shake 0.05s infinite alternate;
+}
+
+.red-flame::before,
+.red-flame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50% 50% 40% 40%;
+  filter: blur(10px);
+  animation: rise 0.25s infinite ease-in-out;
+}
+
+.red-flame::before {
+  background: radial-gradient(
+    circle at bottom,
+    #efd0c2 0%,
+    #ff2a00 45%,
+    transparent 70%
+  );
+}
+
+.red-flame::after {
+  background: radial-gradient(
+    circle at bottom,
+    #ff2a00 0%,
+    #efd0c2 50%,
+    transparent 80%
+  );
+  animation-duration: 0.35s;
+  opacity: 0.9;
+}
+
+
+.result-parchment {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  transform: translate(-50%, -50%) scale(0.7);
+  background: url("img/s-parch.png") center / cover no-repeat;
+  z-index: 20;
+  opacity: 0;
+  animation: revealParchment 1.6s ease forwards;
+}
+
+
+.result-parchment::before {
+  content: "";
+  position: absolute;
+  inset: -35px;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(120,220,255,0.45), transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(80,170,255,0.35), transparent 65%),
+    radial-gradient(circle at 50% 80%, rgba(150,240,255,0.25), transparent 70%);
+  filter: blur(18px);
+  opacity: 0.9;
+  animation: blueSmoke 3.5s infinite ease-in-out;
+  pointer-events: none;
+}
+
+
+
+.result-text {
+  position: absolute;
+  inset: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Parisienne', cursive;
+  font-size: 50px;
+  color: #2b1b0f;
+  opacity: 0;
+  animation: fadeText 1s ease forwards;
+  animation-delay: 1.2s;
+}
+
+@keyframes revealParchment {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%) scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -60%) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes smokePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes fadeText {
+  to { opacity: 1; }
+}
+
+@keyframes blueSmoke {
+  0% {
+    transform: scale(0.95) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.95) rotate(0deg);
+    opacity: 0.6;
+  }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img,
+div,
+button,
+span {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+:focus {
+  outline: none;
+}
+  </style>
+</head>
+
+<body>
+
+  <div class="phone">
+
+    <div class="room">
+
+
+      <div class="ambient-glow"></div>
+
+   
+      <div class="goblet">
+  <div class="triangle-flame"></div>   
+  <div class="blue-flame"></div>      
+  <img src="img/genb.png" alt="Goblet of Fire">
+</div>
+
+
+
+      <div class="parchment">
+        <img src="img/parchment sit.png" alt="Parchment">
+      </div>
+
+    </div>
+
+
+<div class="parchment-overlay" id="parchmentOverlay">
+  <div class="big-parchment" id="bigParchment">
+  <div class="writing-area" contenteditable="true"></div>
+  <img src="img/quill.png" class="quill" />
+</div>
+
+
+  </div>
+</div>
+  </div>
+
+ 
+<audio id="ambientSound" loop>
+  <source src="img/ambient wind.wav" type="audio/wav">
+</audio>
+
+
+<audio id="burnSound">
+  <source src="img/goblet fire.wav" type="audio/wav">
+</audio>
+
+
+<audio id="parchmentClickSound">
+  <source src="img/parchment touch.wav" type="audio/wav">
+</audio>
+
+
+<audio id="writingSound">
+  <source src="img/typing.wav" type="audio/wav">
+</audio>
+
+
+
+
+<audio id="revealSound">
+  <source src="img/reveal task.wav" type="audio/wav">
+</audio>
+
+<script>
+new Image().src = "img/genr.png";
+new Image().src = "img/genb.png";
+
+const ambientSound = document.getElementById("ambientSound");
+const burnSound = document.getElementById("burnSound");
+const parchmentClickSound = document.getElementById("parchmentClickSound");
+const writingSound = document.getElementById("writingSound");
+const revealSound = document.getElementById("revealSound");
+
+ambientSound.volume = 0.35;
+burnSound.volume = 0.25;
+parchmentClickSound.volume = 0.1;
+writingSound.volume = 0.1;
+revealSound.volume = 0.25;
+
+function startAmbientAudio() {
+  ambientSound.play();
+  burnSound.play();
+
+  burnSound.loop = true;
+}
+
+
+document.addEventListener("click", () => {
+  startAmbientAudio();
+}, { once: true });
+
+const smallParchment = document.querySelector(".parchment");
+const overlay = document.getElementById("parchmentOverlay");
+const writingArea = document.querySelector(".writing-area");
+const quill = document.querySelector(".quill");
+let gobletHasChosen = false;
+
+smallParchment.addEventListener("click", () => {
+  parchmentClickSound.currentTime = 0;
+  parchmentClickSound.play();
+  smallParchment.classList.add("hidden");
+  overlay.classList.add("active");
+
+  quill.style.opacity = 1;
+  writingArea.focus();
+  updateQuillPosition();
+});
+
+
+writingArea.addEventListener("input", updateQuillPosition);
+writingArea.addEventListener("click", updateQuillPosition);
+writingArea.addEventListener("keyup", updateQuillPosition);
+writingArea.addEventListener("keydown", (e) => {
+  if (e.key.length === 1 || e.key === "Backspace") {
+  writingSound.currentTime = 0;
+  writingSound.play();
+}
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+
+
+    const br1 = document.createElement("br");
+    const br2 = document.createElement("br");
+
+    range.insertNode(br1);
+    range.insertNode(br2);
+
+
+    range.setStartAfter(br2);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    updateQuillPosition();
+  }
+});
+
+
+
+
+function updateQuillPosition() {
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
+
+  const range = selection.getRangeAt(0).cloneRange();
+  range.collapse(false);
+
+ const rects = range.getClientRects();
+const caretRect = rects[rects.length - 1];
+
+  if (!caretRect) return;
+
+  const areaRect = writingArea.getBoundingClientRect();
+
+  quill.style.left = (caretRect.left - areaRect.left - 18) + "px";
+  quill.style.top  = (caretRect.top - areaRect.top - 22) + "px";
+}
+
+
+
+
+const bigParchment = document.getElementById("bigParchment");
+const room = document.querySelector(".room");
+const goblet = document.querySelector(".goblet");
+
+let isRolled = false;
+let isDragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+
+bigParchment.addEventListener("dblclick", () => {
+  if (isRolled) return;
+
+  isRolled = true;
+  bigParchment.style.cursor = "grab";
+
+
+
+  overlay.classList.remove("active");
+
+
+  room.appendChild(bigParchment);
+
+
+  bigParchment.style.background = "url('img/roll.png') center / contain no-repeat";
+  bigParchment.style.width = "120px";
+  bigParchment.style.height = "200px";
+  bigParchment.style.animation = "none";
+  bigParchment.style.position = "absolute";
+  bigParchment.style.zIndex = "5";
+
+
+  bigParchment.style.left = "120px";
+  bigParchment.style.top = "300px";
+
+
+  writingArea.contentEditable = "false";
+  quill.style.opacity = 0;
+});
+
+
+bigParchment.addEventListener("mousedown", (e) => {
+  if (!isRolled) return;
+  bigParchment.style.cursor = "grabbing";
+
+  isDragging = true;
+  offsetX = e.offsetX;
+  offsetY = e.offsetY;
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+
+  const rect = room.getBoundingClientRect();
+  bigParchment.style.left = (e.clientX - rect.left - offsetX) + "px";
+  bigParchment.style.top  = (e.clientY - rect.top - offsetY) + "px";
+});
+
+document.addEventListener("mouseup", () => {
+  if (!isDragging) return;
+
+  isDragging = false;
+  bigParchment.style.cursor = "grab";
+
+  checkGobletDrop();
+});
+
+
+function chooseTaskFromParchment() {
+  const text = writingArea.innerText;
+
+
+  const tasks = text
+    .split("\n")
+    .map(t => t.trim())
+    .filter(t => t.length > 0);
+
+  if (tasks.length === 0) return null;
+
+   const randomIndex = Math.floor(Math.random() * tasks.length);
+  const chosen = tasks[randomIndex];
+
+
+  localStorage.setItem("gobletChoice", chosen);
+
+  return chosen;
+}
+
+function revealChosenTask(task) {
+  const result = document.createElement("div");
+  result.className = "result-parchment";
+
+  const text = document.createElement("div");
+  text.className = "result-text";
+  text.innerText = task;
+
+  result.appendChild(text);
+  document.querySelector(".phone").appendChild(result);
+}
+
+
+
+function checkGobletDrop() {
+  const pRect = bigParchment.getBoundingClientRect();
+  const gRect = goblet.getBoundingClientRect();
+
+  const overlap =
+    pRect.left < gRect.right &&
+    pRect.right > gRect.left &&
+    pRect.top < gRect.bottom &&
+    pRect.bottom > gRect.top;
+
+    if (overlap) {
+      if (gobletHasChosen) return;
+gobletHasChosen = true;
+
+      const chosenTask = chooseTaskFromParchment();
+console.log("Goblet chose:", chosenTask);
+
+  bigParchment.style.transition = "transform 0.4s ease, opacity 0.4s ease";
+  bigParchment.style.transform = "scale(0.3) translateY(80px)";
+  bigParchment.style.opacity = "0";
+
+
+  goblet.classList.add("angry");
+
+
+  const gobletImg = goblet.querySelector("img");
+  gobletImg.src = "img/genr.png";
+  goblet.style.bottom = "-10px";
+
+
+  const blueFlame = goblet.querySelector(".blue-flame");
+
+  setTimeout(() => {
+    blueFlame.remove();
+
+
+    const redFlame = document.createElement("div");
+    redFlame.className = "red-flame";
+    goblet.appendChild(redFlame);
+  }, 600);
+
+  setTimeout(() => {
+  bigParchment.remove();
+}, 400);
+
+
+setTimeout(() => {
+
+  revealSound.currentTime = 0;
+  revealSound.play();
+
+  revealChosenTask(chosenTask);
+
+}, 1200);
+
+
+setTimeout(() => {
+  goblet.classList.remove("angry");
+
+  const redFlame = goblet.querySelector(".red-flame");
+  if (redFlame) redFlame.remove();
+
+
+  const newBlueFlame = document.createElement("div");
+  newBlueFlame.className = "blue-flame";
+  goblet.appendChild(newBlueFlame);
+
+
+  const gobletImg = goblet.querySelector("img");
+  gobletImg.src = "img/genb.png";
+
+  goblet.style.bottom = "-10px";
+}, 1800);
+
+}
+
+
+}
+
+goblet.addEventListener("mouseenter", () => {
+  if (isRolled) {
+    goblet.style.cursor = "grab";
+  }
+});
+
+goblet.addEventListener("mouseleave", () => {
+  goblet.style.cursor = "default";
+});
+
+
+
+</script>
+
+
+</body>
+</html>
